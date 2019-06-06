@@ -8,7 +8,8 @@ import {
   Mesh,
   LineBasicMaterial,
   Geometry,
-  Line
+  Line,
+  Color
 } from 'three';
 import { World } from '../world/World';
 import { Controls } from './Controls';
@@ -25,6 +26,7 @@ export class Player {
   isOnGround: boolean;
   cameraRotation: { yaw: number; pitch: number };
   hoveredBlock: Block | null;
+  hoveredBlockFace: Vector3 | null;
 
   constructor(world: World) {
     this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -35,6 +37,7 @@ export class Player {
     this.maxSpeed = 1;
     this.isOnGround = false;
     this.hoveredBlock = null;
+    this.hoveredBlockFace = null;
   }
 
   update(world: World, controls: Controls) {
@@ -82,6 +85,8 @@ export class Player {
       position.y = Math.ceil(position.y);
       this.velocity.y = 0;
       this.isOnGround = true;
+    } else {
+      this.isOnGround = false;
     }
     this.setPosition(position);
     this.getHoveredBlock(world);
@@ -106,15 +111,24 @@ export class Player {
     this.camera.rotation.x = clamp(this.camera.rotation.x, -Math.PI / 2, Math.PI / 2);
   }
 
+  placeBlock(world: World) {
+    if (!this.hoveredBlock) return;
+    let color = new Color(0x33ff33);
+    const { x, y, z } = this.hoveredBlock.position.clone().add(this.hoveredBlockFace);
+    world.addBlock(new Vector3(x, y, z), color);
+  }
+
   getHoveredBlock(world: World) {
     if (this.hoveredBlock) {
       this.hoveredBlock.setOriginalColor();
       this.hoveredBlock = null;
+      this.hoveredBlockFace = null;
     }
     const raycaster = new Raycaster();
     raycaster.setFromCamera(new Vector2(0, 0), this.camera);
     const intersects = raycaster.intersectObjects(world.scene.children);
     if (intersects[0] && intersects[0].distance < 5) {
+      this.hoveredBlockFace = intersects[0].face.normal;
       this.hoveredBlock = world.findBlock(intersects[0].object);
       this.hoveredBlock.setHoveredColor();
     }

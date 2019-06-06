@@ -46,5 +46,10 @@ export class Controls {
         this.player.rotateCamera(e.movementX, e.movementY);
       }
     };
+
+    window.onmousedown = e => {
+      this.player.placeBlock(this.world);
+    };
+    window.onmouseup = e => {};
   }
 }

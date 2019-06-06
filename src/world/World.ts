@@ -37,15 +37,20 @@ export class World {
     return this.blocks.get(`${Math.round(position.x)} ${Math.ceil(position.y) - 2} ${Math.round(position.z)}`) || 'air';
   }
 
+  addBlock(position: Vector3, color: Color) {
+    const block = new Block(position, color);
+    this.blocks.set(`${position.x} ${position.y} ${position.z}`, block);
+    this.scene.add(block.mesh);
+  }
+
   generateBlocks() {
     for (let i = 0; i < 50; i++) {
       for (let j = 0; j < 50; j++) {
         let color = new Color(0x33ff33);
         if (Math.random() < 0.75) color = new Color(0x33cc33);
-        this.blocks.set(`${i} ${0} ${j}`, new Block(new Vector3(i, 0, j), color));
+        this.addBlock(new Vector3(i, 0, j), color);
       }
     }
-    this.blocks.forEach(block => this.scene.add(block.mesh));
   }
 
   findBlock(object: Object3D): Block {
