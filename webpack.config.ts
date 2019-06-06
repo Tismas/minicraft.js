@@ -22,6 +22,15 @@ const config: webpack.Configuration = {
         use: {
           loader: 'ts-loader'
         }
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {}
+          }
+        ]
       }
     ]
   },

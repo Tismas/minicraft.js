@@ -1,19 +1,16 @@
-import { Vector3, Shape, BoxGeometry, MeshBasicMaterial, Color, Mesh } from 'three';
-
-const WIDTH = 1;
-const LEN = 1;
+import { Vector3, Shape, BoxGeometry, MeshLambertMaterial, Color, Mesh } from 'three';
 
 export class Block {
   position: Vector3;
   shape: Shape;
   geometry: BoxGeometry;
-  material: MeshBasicMaterial;
+  material: MeshLambertMaterial;
   mesh: Mesh;
   originalColor: Color;
 
   constructor(position: Vector3, color: Color) {
     this.geometry = new BoxGeometry(1, 1, 1);
-    this.material = new MeshBasicMaterial({ color });
+    this.material = new MeshLambertMaterial({ color });
     this.mesh = new Mesh(this.geometry, this.material);
     this.setPosition(position);
     this.originalColor = color;

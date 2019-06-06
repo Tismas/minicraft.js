@@ -1,8 +1,8 @@
-import { Scene, Fog, PointLight, Color, Vector3, Light, Object3D } from 'three';
+import { Scene, Fog, DirectionalLight, Color, Vector3, Light, Object3D, AmbientLight } from 'three';
 import { Block } from './Block';
 import { Player } from '../player/Player';
 
-const DAY_DURATION = 100;
+const DAY_DURATION = 24000;
 
 export class World {
   scene: Scene;
@@ -18,7 +18,7 @@ export class World {
     this.gravity = 0.01;
 
     this.scene.fog = new Fog(0x000000, 10, 40);
-    this.light = new PointLight(0xffffff);
+    this.light = new DirectionalLight(0xffffff, 1);
     this.light.position.set(25, 25, 25);
     this.scene.add(this.light);
 
