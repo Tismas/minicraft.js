@@ -1,19 +1,19 @@
-import { Vector3, Shape, BoxGeometry, MeshLambertMaterial, Color, Mesh } from 'three';
+import { Vector3, Shape, BoxGeometry, MeshBasicMaterial, Color, Mesh, TextureLoader } from 'three';
+import * as Dirt from '../assets/dirt.png';
 
 export class Block {
   position: Vector3;
   shape: Shape;
   geometry: BoxGeometry;
-  material: MeshLambertMaterial;
+  material: MeshBasicMaterial;
   mesh: Mesh;
   originalColor: Color;
 
   constructor(position: Vector3, color: Color) {
     this.geometry = new BoxGeometry(1, 1, 1);
-    this.material = new MeshLambertMaterial({ color });
+    this.material = new MeshBasicMaterial({ map: new TextureLoader().load(Dirt) });
     this.mesh = new Mesh(this.geometry, this.material);
     this.setPosition(position);
-    this.originalColor = color;
   }
 
   setPosition(position: Vector3) {
@@ -24,7 +24,7 @@ export class Block {
   }
 
   setOriginalColor() {
-    this.material.color.set(this.originalColor);
+    this.material.color.add(new Color(0x202020));
   }
 
   setHoveredColor() {
