@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "ghpages": "yarn build && cd dist && git add --all && git commit -m 'release' && git push"
   },
   "dependencies": {
     "@types/html-webpack-plugin": "^3.2.0",
