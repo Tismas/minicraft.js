@@ -1,5 +1,10 @@
-import { Vector3, Shape, BoxGeometry, MeshBasicMaterial, Color, Mesh, TextureLoader } from 'three';
+import { Vector3, Shape, BoxGeometry, MeshBasicMaterial, Color, Mesh, TextureLoader, NearestFilter } from 'three';
 import * as Dirt from '../assets/dirt.png';
+
+const loader = new TextureLoader();
+const geometry = new BoxGeometry(1, 1, 1);
+const texture = loader.load(Dirt);
+texture.magFilter = NearestFilter;
 
 export class Block {
   position: Vector3;
@@ -7,12 +12,10 @@ export class Block {
   geometry: BoxGeometry;
   material: MeshBasicMaterial;
   mesh: Mesh;
-  originalColor: Color;
 
-  constructor(position: Vector3, color: Color) {
-    this.geometry = new BoxGeometry(1, 1, 1);
-    this.material = new MeshBasicMaterial({ map: new TextureLoader().load(Dirt) });
-    this.mesh = new Mesh(this.geometry, this.material);
+  constructor(position: Vector3) {
+    this.material = new MeshBasicMaterial({ map: texture });
+    this.mesh = new Mesh(geometry, this.material);
     this.setPosition(position);
   }
 

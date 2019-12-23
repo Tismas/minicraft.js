@@ -1,4 +1,4 @@
-import { WebGLRenderer } from 'three';
+import { WebGLRenderer, PerspectiveCamera } from 'three';
 import { World } from './world/World';
 import { Player } from './player/Player';
 import { Controls } from './player/Controls';
@@ -21,6 +21,7 @@ let update = () => {
 
 let resize = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
+  player.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 };
 
 let init = () => {

@@ -1,16 +1,4 @@
-import {
-  PerspectiveCamera,
-  Vector3,
-  Quaternion,
-  Camera,
-  Raycaster,
-  Vector2,
-  Mesh,
-  LineBasicMaterial,
-  Geometry,
-  Line,
-  Color
-} from 'three';
+import { PerspectiveCamera, Vector3, Raycaster, Vector2, Color } from 'three';
 import { World } from '../world/World';
 import { Controls } from './Controls';
 import { clamp } from '../utils/clamp';
@@ -82,13 +70,12 @@ export class Player {
       this.velocity.z * Math.cos(this.camera.rotation.y) - this.velocity.x * Math.sin(this.camera.rotation.y);
     position.y += this.velocity.y;
     if (world.getBlock(position) !== 'air') {
-      position.y = Math.ceil(position.y);
       this.velocity.y = 0;
       this.isOnGround = true;
     } else {
       this.isOnGround = false;
+      this.setPosition(position);
     }
-    this.setPosition(position);
     this.getHoveredBlock(world);
   }
 
@@ -113,9 +100,8 @@ export class Player {
 
   placeBlock(world: World) {
     if (!this.hoveredBlock) return;
-    let color = new Color(0x33ff33);
     const { x, y, z } = this.hoveredBlock.position.clone().add(this.hoveredBlockFace);
-    world.addBlock(new Vector3(x, y, z), color);
+    world.addBlock(new Vector3(x, y, z));
   }
 
   getHoveredBlock(world: World) {
