@@ -1,14 +1,15 @@
-import { Scene, Fog, DirectionalLight, Color, Vector3, Light, Object3D, AmbientLight } from 'three';
+import { Scene, Fog, DirectionalLight, Vector3, Object3D, HemisphereLight } from 'three';
 import { Block } from './Block';
 import { Player } from '../player/Player';
 
-const DAY_DURATION = 24000;
+const DAY_DURATION = 2400;
 
 export class World {
   scene: Scene;
   blocks: Map<string, Block>;
   gravity: number;
-  light: Light;
+  sun: DirectionalLight;
+  hemiLight: HemisphereLight;
   daytime: number;
 
   constructor() {
@@ -18,9 +19,29 @@ export class World {
     this.gravity = 0.01;
 
     this.scene.fog = new Fog(0x000000, 10, 40);
-    this.light = new DirectionalLight(0xffffff, 1);
-    this.light.position.set(25, 25, 25);
-    this.scene.add(this.light);
+
+    this.sun = new DirectionalLight(0xffffff, 1);
+    this.sun.position.set(-1, 0.75, 1);
+    this.sun.position.multiplyScalar(50);
+    this.sun.name = 'dirlight';
+    this.scene.add(this.sun);
+    this.sun.castShadow = true;
+    this.sun.shadow.mapSize.height = this.sun.shadowMapHeight = 1024 * 2;
+
+    const d = 300;
+    this.sun.shadowCameraLeft = -d;
+    this.sun.shadowCameraRight = d;
+    this.sun.shadowCameraTop = d;
+    this.sun.shadowCameraBottom = -d;
+
+    this.sun.shadowCameraFar = 3500;
+    this.sun.shadowBias = -0.0001;
+
+    this.hemiLight = new HemisphereLight(0xffffff, 0xffffff, 0.6);
+    this.hemiLight.color.setHSL(0.6, 0.75, 0.5);
+    this.hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+    this.hemiLight.position.set(0, 500, 0);
+    this.scene.add(this.hemiLight);
 
     this.generateBlocks();
   }
@@ -28,9 +49,6 @@ export class World {
   update(player: Player) {
     this.daytime += 1;
     if (this.daytime === DAY_DURATION) this.daytime = 0;
-    const y = Math.cos((this.daytime / DAY_DURATION) * Math.PI * 2) * 100;
-    const z = Math.sin((this.daytime / DAY_DURATION) * Math.PI * 2) * 100;
-    this.light.position.set(player.position.x, y, z);
   }
 
   getBlock(position: Vector3) {

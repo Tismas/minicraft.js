@@ -1,4 +1,4 @@
-import { Vector3, Shape, BoxGeometry, MeshBasicMaterial, Color, Mesh, TextureLoader, NearestFilter } from 'three';
+import { Vector3, Shape, BoxGeometry, MeshLambertMaterial, Color, Mesh, TextureLoader, NearestFilter } from 'three';
 import * as Dirt from '../assets/dirt.png';
 
 const loader = new TextureLoader();
@@ -10,11 +10,11 @@ export class Block {
   position: Vector3;
   shape: Shape;
   geometry: BoxGeometry;
-  material: MeshBasicMaterial;
+  material: MeshLambertMaterial;
   mesh: Mesh;
 
   constructor(position: Vector3) {
-    this.material = new MeshBasicMaterial({ map: texture });
+    this.material = new MeshLambertMaterial({ map: texture });
     this.mesh = new Mesh(geometry, this.material);
     this.setPosition(position);
   }
